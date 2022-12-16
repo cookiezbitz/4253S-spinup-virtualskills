@@ -40,9 +40,155 @@ def main():
     drivetrain.set_turn_velocity(100,PERCENT)
     drivetrain.set_heading(270,DEGREES)
 
+    #   FRONT of the bot is the intake
+    #   BACK of the bot is the shooter
+
+    #begin
+    drivetrain.drive_for(REVERSE,40,MM)
+    drivetrain.turn_to_heading(169,DEGREES)
+    drivetrain.drive_for(FORWARD,100,MM)
+
+    intake_motor_group.spin(REVERSE)
+    wait(4,SECONDS)
+    drivetrain.drive_for(FORWARD,200,MM)
+    wait(1.2,SECONDS)
+    drivetrain.turn_to_heading(240,DEGREES)
+    drivetrain.drive_for(FORWARD,500,MM)
+    wait(.8,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.turn_to_heading(192,DEGREES)
+    intake_motor_group.spin(REVERSE)
+    wait(2,SECONDS)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(FORWARD,640,MM)
+    wait(.1,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.turn_to_heading(145,DEGREES)
+    intake_motor_group.set_velocity(50,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,210,MM)
+    intake_motor_group.set_velocity(90,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.turn_to_heading(205,DEGREES)
+    wait(1,SECONDS)
+    drivetrain.turn_to_heading(145,DEGREES)
+    intake_motor_group.set_velocity(90,PERCENT)
+    drivetrain.drive_for(FORWARD,390,MM)
+    wait(.8,SECONDS)
+    drivetrain.turn_to_heading(195,DEGREES)
+    wait(1,SECONDS)
+    drivetrain.turn_to_heading(135,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+
+    drivetrain.drive_for(FORWARD,900,MM)
+    wait(.3,SECONDS)
+    drivetrain.turn_to_heading(178,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    wait(3,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.drive_for(REVERSE,200,MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(REVERSE,110,MM)
+    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+    drivetrain.drive_for(FORWARD,500,MM)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(REVERSE,297,MM)
+    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+    drivetrain.set_heading(0,DEGREES)
+    drivetrain.turn_to_heading(308,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,750,MM)
+    drivetrain.turn_to_heading(315,DEGREES)
+    drivetrain.drive_for(FORWARD,400,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,485,MM)
+    wait(.4,SECONDS)
+    drivetrain.turn_to_heading(55,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    wait(1,SECONDS)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.turn_to_heading(180,DEGREES)
+    drivetrain.drive_for(FORWARD,800,MM)
+    drivetrain.turn_to_heading(225,DEGREES)
+    drivetrain.drive_for(FORWARD,300,MM)
+    wait(.2,SECONDS)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(FORWARD,150,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,150,MM)
+    wait(.4,SECONDS)
+    drivetrain.drive_for(FORWARD,260,MM)
+    wait(.6,SECONDS)
+    drivetrain.turn_to_heading(55,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    drivetrain.drive_for(FORWARD,500,MM)
+    wait(1,SECONDS)
+    drivetrain.turn_to_heading(285,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.drive_for(FORWARD,400,MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(FORWARD,150,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,100,MM)
+    wait(.3,SECONDS)
+    drivetrain.drive_for(FORWARD,300,MM)
+    wait(.5,SECONDS)
+    drivetrain.drive(FORWARD)
+    while not gps.x_position(MM) > 1320:
+        wait(.1,SECONDS)
+    drivetrain.stop()
+    intake_motor_group.set_velocity(100,PERCENT)
+    drivetrain.turn_to_heading(347,DEGREES)
+    drivetrain.drive_for(FORWARD,192,MM)
+    wait(1,SECONDS)
+    drivetrain.drive_for(FORWARD,30,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,30,MM)
+    wait(.4,SECONDS)
+    drivetrain.drive_for(FORWARD,80,MM)
+    wait(.2,SECONDS)
+    """
+    drivetrain.turn_to_heading(21,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    wait(2,SECONDS)
+    
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(FORWARD,550,MM)
+    wait(.5,SECONDS)
+    drivetrain.turn_to_heading(17,DEGREES)
+    wait(2,SECONDS)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(FORWARD,600,MM)
+    intake_motor_group.set_velocity(95,PERCENT)
+    drivetrain.turn_to_heading(10,DEGREES)
+    wait(2,SECONDS)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(REVERSE,990,MM)
+    drivetrain.turn_to_heading(90,DEGREES)
+    drivetrain.drive_for(REVERSE,575,MM)
+    drivetrain.turn_to_heading(349,DEGREES)
+    drivetrain.drive_for(FORWARD,90,MM)
+
+"""
+    
+
+
+    
+
+   
+
+
+
+    """
+    continuemoving = True
+
     #troublehsooting code
     #print(top_line_tracker.reflectivity(PERCENT))
-    print("vexcode")
+
+    #console prints to brain screen, need to include brain screen when printing
+
+
 
     #moves the robot into position to fire the discs into high goal
     drivetrain.drive_for(FORWARD, 200, MM)
@@ -54,21 +200,96 @@ def main():
     #stopping the motor is necesary in order to prevent an error (loop)
     intake_motor_group.stop()
 
+    #drives the robot into position to take in the match loads
+    drivetrain.drive_for(FORWARD,300,MM)
+    drivetrain.turn_to_heading(90,DEGREES)
 
+    #intakes the match loads
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,230,MM)
+
+    #the wait function allows for the discs time to make their way up
+    wait(.85,SECONDS)
+    intake_motor_group.stop()
+
+    #positions the robot to prepare to fire the match loads
+    drivetrain.drive_for(REVERSE,120,MM)
+    #changing the position here allows for more discs to be able to be shot into the goal
+    drivetrain.turn_to_heading(180,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    #fires the match load
+    intake_motor_group.spin(REVERSE)
+    #wait function provides time for all discs to fly into goal
+    wait(2,SECONDS)
+    intake_motor_group.stop()
+        #repositions the bot after firing
+    drivetrain.turn_to_heading(90,DEGREES)
+    drivetrain.drive_for(FORWARD,120,MM)
+    drivetrain.drive_for(REVERSE,300,MM)
+    #bot repositioned, preparing to intake discs
+    wait(1,SECONDS)
+    intake_motor_group.set_velocity(100,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,300,MM)
+
+    wait(.85,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.turn_to_heading(180,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    wait(2,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.drive_for(FORWARD,1200,MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(REVERSE,30,MM)
+    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+    drivetrain.drive_for(FORWARD,480,MM)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(REVERSE,280,MM)
+    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+
+
+    # first part 60 points in 13 seconds, always misses the first disc. code CAN be made more efficient
+    # again this CAN BE MADE MORE EFFICIENT WITH WORK
+
+    """
+    """
     drivetrain.drive_for(FORWARD, 1200, MM)
-    drivetrain.turn_to_heading(270,DEGREES);
+    drivetrain.turn_to_heading(270,DEGREES)
 
 
     drivetrain.set_drive_velocity(30,PERCENT)
-    if top_line_tracker.reflectivity(PERCENT)>20:
-        drivetrain.stop()
-        intake_motor_group.stop()
-    else:
-        drivetrain.drive(FORWARD)
-        intake_motor_group.spin(REVERSE)
+    intake_motor_group.set_velocity(30,PERCENT)
+
+
+    #part below is prone to not working, i got too stressed, getting rid of it
+    """
+    """
+    while continuemoving == True:
+      while top_line_tracker.reflectivity(PERCENT) == 84:
+         
+         intake_motor_group.stop()
+         continuemoving = False
+      else:
+         drivetrain.drive(FORWARD)
+         intake_motor_group.spin(REVERSE)
+         #troubleshooting code below
+         i = 0
+         while i<30:
+              brain.screen.print(top_line_tracker.reflectivity(PERCENT))
+              brain.screen.next_row()
+              i = i+ 1
+              if middle_line_tracker.reflectivity(PERCENT) == 84:
+                continuemoving = False
 
 
 
+
+    intake_motor_group.stop()
+    wait(300,SECONDS);
+    """
+
+    
 
     
 # VR threads — Do not delete
