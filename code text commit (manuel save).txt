@@ -50,8 +50,15 @@ def main():
 
     intake_motor_group.spin(REVERSE)
     wait(4,SECONDS)
+    #finishes section 1, shoots preloads
+
+    #removable
     drivetrain.drive_for(FORWARD,200,MM)
     wait(1.2,SECONDS)
+    #removable
+
+
+
     drivetrain.turn_to_heading(240,DEGREES)
     drivetrain.drive_for(FORWARD,500,MM)
     wait(.8,SECONDS)
@@ -59,6 +66,9 @@ def main():
     drivetrain.turn_to_heading(192,DEGREES)
     intake_motor_group.spin(REVERSE)
     wait(2,SECONDS)
+    #shoots 3 stack
+
+
     drivetrain.turn_to_heading(270,DEGREES)
     drivetrain.drive_for(FORWARD,640,MM)
     wait(.1,SECONDS)
@@ -67,34 +77,59 @@ def main():
     intake_motor_group.set_velocity(50,PERCENT)
     intake_motor_group.spin(REVERSE)
     drivetrain.drive_for(FORWARD,210,MM)
+    #intakes 2 discs
+
     intake_motor_group.set_velocity(90,PERCENT)
     intake_motor_group.spin(REVERSE)
     drivetrain.turn_to_heading(205,DEGREES)
     wait(1,SECONDS)
+    #shoots all two
+
+   
+    #turns towards the three stack
     drivetrain.turn_to_heading(145,DEGREES)
     intake_motor_group.set_velocity(90,PERCENT)
     drivetrain.drive_for(FORWARD,390,MM)
     wait(.8,SECONDS)
+    #intakes 3 stack
+
     drivetrain.turn_to_heading(195,DEGREES)
     wait(1,SECONDS)
+    #fires 3 stack 
+
+    #intakes the last two discs
     drivetrain.turn_to_heading(135,DEGREES)
     intake_motor_group.set_velocity(30,PERCENT)
-
     drivetrain.drive_for(FORWARD,900,MM)
     wait(.3,SECONDS)
     drivetrain.turn_to_heading(178,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
     wait(3,SECONDS)
+    #fires last two discs
+
+
     intake_motor_group.stop()
+
+    #positions bot in front of the roller
     drivetrain.drive_for(REVERSE,200,MM)
     drivetrain.turn_to_heading(270,DEGREES)
     drivetrain.drive_for(REVERSE,110,MM)
+    #.1 turns is perfect for moving the roller once, but we could make use of the optical sensor here
     intake_motor_group.spin_for(FORWARD,.1,TURNS)
+
+
+    #robot moves itself away from the roller to prepare to turn the other one
     drivetrain.drive_for(FORWARD,500,MM)
     drivetrain.turn_to_heading(0,DEGREES)
     drivetrain.drive_for(REVERSE,297,MM)
+    #once again we can make use of the sensor
     intake_motor_group.spin_for(FORWARD,.1,TURNS)
+
+    #resets the drivetrain heading to mitigate errors
+    #this can be a gps resetting point
     drivetrain.set_heading(0,DEGREES)
+
+    #intakes 3 discs, the wait function here can be improved and the velocity can be perfected
     drivetrain.turn_to_heading(308,DEGREES)
     intake_motor_group.set_velocity(30,PERCENT)
     intake_motor_group.spin(REVERSE)
@@ -104,9 +139,15 @@ def main():
     wait(.2,SECONDS)
     drivetrain.drive_for(FORWARD,485,MM)
     wait(.4,SECONDS)
+    #
+
+    #fires the discs
     drivetrain.turn_to_heading(55,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
     wait(1,SECONDS)
+    #once again the wait can be perfected, or sensors can be used to detect when the last disc is fired
+
+    #manuevers the robot behind three discs for intaking
     intake_motor_group.set_velocity(30,PERCENT)
     drivetrain.turn_to_heading(180,DEGREES)
     drivetrain.drive_for(FORWARD,800,MM)
@@ -120,10 +161,15 @@ def main():
     wait(.4,SECONDS)
     drivetrain.drive_for(FORWARD,260,MM)
     wait(.6,SECONDS)
+    #the robot occasionally misses discs here so the intake can be improved by rotating to where the disc should be every wait
+
     drivetrain.turn_to_heading(55,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.drive_for(FORWARD,500,MM)
     wait(1,SECONDS)
+    #fires the discs
+
+    #robot repositions itself to intake 3 more discs
     drivetrain.turn_to_heading(285,DEGREES)
     intake_motor_group.set_velocity(30,PERCENT)
     drivetrain.drive_for(FORWARD,400,MM)
@@ -134,20 +180,26 @@ def main():
     wait(.3,SECONDS)
     drivetrain.drive_for(FORWARD,300,MM)
     wait(.5,SECONDS)
+    #intakes the three
+
     drivetrain.drive(FORWARD)
 
     while not gps.x_position(MM) > 1380:
         wait(.1,SECONDS)
     drivetrain.stop()
-    
+    #the robot uses a gps to set a correction point so the robot moves to this position based on it's gps data. 
+    #Since this is virtual skills, the gps has very little error and thus can be used in this manner
 
     intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.turn_to_heading(347,DEGREES)
 
+    #second part of the gps to correct the Y value of the robot
     drivetrain.drive(FORWARD)
     while not gps.y_position(MM) < 260:
         wait(.1,SECONDS)
     drivetrain.stop()
+
+    
 
 
 
