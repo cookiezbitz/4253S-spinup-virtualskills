@@ -135,19 +135,23 @@ def main():
     drivetrain.drive_for(FORWARD,300,MM)
     wait(.5,SECONDS)
     drivetrain.drive(FORWARD)
-    while not gps.x_position(MM) > 1320:
+
+    while not gps.x_position(MM) > 1380:
         wait(.1,SECONDS)
     drivetrain.stop()
+    
+
     intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.turn_to_heading(347,DEGREES)
-    drivetrain.drive_for(FORWARD,192,MM)
-    wait(1,SECONDS)
-    drivetrain.drive_for(FORWARD,30,MM)
-    wait(.2,SECONDS)
-    drivetrain.drive_for(FORWARD,30,MM)
-    wait(.4,SECONDS)
-    drivetrain.drive_for(FORWARD,80,MM)
-    wait(.2,SECONDS)
+
+    drivetrain.drive(FORWARD)
+    while not gps.y_position(MM) < 260:
+        wait(.1,SECONDS)
+    drivetrain.stop()
+
+
+
+
     """
     drivetrain.turn_to_heading(21,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
