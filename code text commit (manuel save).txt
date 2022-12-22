@@ -31,8 +31,69 @@ top_line_tracker = LineTracker("TopLineTracker", 24)
 # Library imports
 from vexcode_vrc import *
 
+#function to turn roller
+def turnroller():
+    intake_motor_group.set_velocity(80,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    while not roller_optical.color() == RED.value:
+        wait(1, MSEC)
+    while not roller_optical.color() == BLUE.value:
+        wait(1, MSEC)
+    intake_motor_group.stop()
+
+#variables to fire the discs with
+discstoshoot = 0
+discsshot = 0
+#function to fire the disc
+def shootdisc(discstoshoot):
+    intake_motor_group.spin(REVERSE)
+    for x in range(discstoshoot):
+        while not top_line_tracker.reflectivity(PERCENT) > 80:
+            wait(5, MSEC)
+          
+        while not top_line_tracker.reflectivity(PERCENT) < 20:
+            wait(5, MSEC)
+    discstoshoot = 0
+    intake_motor_group.stop()
+
+#function to position the robot to intake the disc
+def movetodisc():
+    drivetrain.drive(FORWARD)
+    while not bottom_distance.object_distance(MM) < 20:
+        wait(5, MSEC)
+    drivetrain.stop()
+
+
+"""
+discstointake = 0
+discsintaked = 0
+def intakedisc(discstointake):
+    discsintaked = 0
+    intake_motor_group.set_velocity(30,PERCENT)
+    intake_motor_group.spin(REVERSE)
+
+    while not bottom_line_tracker.reflectivity(PERCENT) > 80:
+            wait(5, MSEC)
+          
+    while not bottom_line_tracker.reflectivity(PERCENT) < 20:
+            wait(5, MSEC)
+    discsintaked += 1
+    while not discstointake == discsintaked:
+        wait(5,MSEC)
+
+
+    discstointake = 0
+    intake_motor_group.stop()
+
+"""
+
+
+
 # Add project code in "main"
 def main():
+
+
+
 
     #SETUP CODE, GETS THE ROBOT TO BE AS FAST AS POSSIBLE
     intake_motor_group.set_velocity(100,PERCENT)
@@ -45,16 +106,16 @@ def main():
 
     #begin
     drivetrain.drive_for(REVERSE,40,MM)
-    drivetrain.turn_to_heading(169,DEGREES)
-    drivetrain.drive_for(FORWARD,100,MM)
+    drivetrain.turn_to_heading(168,DEGREES)
+    drivetrain.drive_for(FORWARD,110,MM)
 
-    intake_motor_group.spin(REVERSE)
-    wait(4,SECONDS)
+    shootdisc(2)
     #finishes section 1, shoots preloads
-
+    
+    intake_motor_group.spin(REVERSE)
     #removable
-    drivetrain.drive_for(FORWARD,200,MM)
-    wait(1.2,SECONDS)
+    drivetrain.drive_for(FORWARD,190,MM)
+
     #removable
 
 
@@ -64,10 +125,9 @@ def main():
     wait(.8,SECONDS)
     intake_motor_group.stop()
     drivetrain.turn_to_heading(192,DEGREES)
-    intake_motor_group.spin(REVERSE)
-    wait(2,SECONDS)
+    shootdisc(3)
     #shoots 3 stack
-
+    intake_motor_group.spin(REVERSE)
 
     drivetrain.turn_to_heading(270,DEGREES)
     drivetrain.drive_for(FORWARD,640,MM)
@@ -115,7 +175,9 @@ def main():
     drivetrain.turn_to_heading(270,DEGREES)
     drivetrain.drive_for(REVERSE,110,MM)
     #.1 turns is perfect for moving the roller once, but we could make use of the optical sensor here
-    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+   
+    turnroller()
+   # intake_motor_group.spin_for(FORWARD,.1,TURNS)
 
 
     #robot moves itself away from the roller to prepare to turn the other one
@@ -123,7 +185,7 @@ def main():
     drivetrain.turn_to_heading(0,DEGREES)
     drivetrain.drive_for(REVERSE,297,MM)
     #once again we can make use of the sensor
-    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+    turnroller()
 
     #resets the drivetrain heading to mitigate errors
     #this can be a gps resetting point
@@ -183,6 +245,9 @@ def main():
     #intakes the three
 
     drivetrain.drive(FORWARD)
+
+
+    #NOTE: THE GPS SENSOR IS STILL INCONSISTENT
 
     while not gps.x_position(MM) > 1380:
         wait(.1,SECONDS)
