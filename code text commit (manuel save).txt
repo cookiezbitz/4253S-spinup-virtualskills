@@ -31,6 +31,64 @@ top_line_tracker = LineTracker("TopLineTracker", 24)
 # Library imports
 from vexcode_vrc import *
 
+#function to turn roller
+def turnroller():
+    intake_motor_group.set_velocity(80,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    while not roller_optical.color() == RED.value:
+        wait(1, MSEC)
+    while not roller_optical.color() == BLUE.value:
+        wait(1, MSEC)
+    intake_motor_group.stop()
+
+#variables to fire the discs with
+discstoshoot = 0
+discsshot = 0
+
+#function to fire the disc
+def shootdisc(discstoshoot):
+    intake_motor_group.spin(REVERSE)
+    for x in range(discstoshoot):
+        while not top_line_tracker.reflectivity(PERCENT) > 80:
+            wait(5, MSEC)
+          
+        while not top_line_tracker.reflectivity(PERCENT) < 20:
+            wait(5, MSEC)
+    discstoshoot = 0
+
+
+#function to position the robot to intake the disc
+def movetodisc():
+    drivetrain.drive(FORWARD)
+    while not bottom_distance.object_distance(MM) < 20:
+        wait(5, MSEC)
+    drivetrain.stop()
+
+
+#to be used as a zig zagger to get discs near low goal barrier
+discstointake = 0
+discsintaked = 0
+def intakedisc(discstointake):
+    discsintaked = 0
+    intake_motor_group.set_velocity(30,PERCENT)
+    intake_motor_group.spin(REVERSE)
+
+    while not bottom_line_tracker.reflectivity(PERCENT) > 80:
+            wait(5, MSEC)
+          
+    while not bottom_line_tracker.reflectivity(PERCENT) < 20:
+            wait(5, MSEC)
+    discsintaked += 1
+    while not discstointake == discsintaked:
+        wait(5,MSEC)
+
+
+    discstointake = 0
+    intake_motor_group.stop()
+#to be used as a zig zagger to get the discs near the low gal barrier
+
+
+#declaring the variables to be used in the drive to coordinate function
 endposx = 0
 endposy = 0
 
@@ -57,12 +115,12 @@ def drivetocord(endposx,endposy, Otherturn):
 
     travelDistance = math.sqrt((endposx-(beginposx))**2 + (endposy-(beginposy))**2)
 
-    turnangle = (math.degrees(math.atan2((endposy-beginposy), (endposx - beginposx))))
+    turnangle = math.degrees(math.atan((endposy-beginposy) / (endposx - beginposx)))
     
     if Otherturn == False:
         turnheading = beginheading - turnangle
     else:
-        turnheading = beginheading - turnangle -90
+        turnheading = beginheading + turnangle
     
     
     if turnheading > 360:
@@ -76,20 +134,338 @@ def drivetocord(endposx,endposy, Otherturn):
 
 
 
-
-
 # Add project code in "main"
 def main():
-    drivetrain.set_heading(0,DEGREES)
+
+
+
+
+    #SETUP CODE, GETS THE ROBOT TO BE AS FAST AS POSSIBLE
+    intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.set_drive_velocity(100,PERCENT)
-    drivetocord(0,0,False)
-    drivetocord(-400,-400,False)
-    drivetocord(0,0,True)
+    drivetrain.set_turn_velocity(100,PERCENT)
+    drivetrain.set_heading(270,DEGREES)
+
+    #   FRONT of the bot is the intake
+    #   BACK of the bot is the shooter
+
+    #begin
+    drivetrain.drive_for(REVERSE,40,MM)
+    drivetrain.turn_to_heading(168,DEGREES)
+    drivetrain.drive_for(FORWARD,110,MM)
+
+    shootdisc(2)
+    #finishes section 1, shoots preloads
+    
+    intake_motor_group.spin(REVERSE)
+    #removable
+    drivetrain.drive_for(FORWARD,190,MM)
+
+    #removable
+
+
+
+    drivetrain.turn_to_heading(240,DEGREES)
+    drivetrain.drive_for(FORWARD,500,MM)
+    wait(.8,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.turn_to_heading(192,DEGREES)
+    shootdisc(3)
+    #shoots 3 stack
+    intake_motor_group.spin(REVERSE)
+
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(FORWARD,640,MM)
+    wait(.1,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.turn_to_heading(145,DEGREES)
+    intake_motor_group.set_velocity(50,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,210,MM)
+    #intakes 2 discs
+
+    intake_motor_group.set_velocity(90,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.turn_to_heading(205,DEGREES)
+    shootdisc(2)
+    #shoots all two
+
+   
+    #turns towards the three stack
+    drivetrain.turn_to_heading(145,DEGREES)
+    intake_motor_group.set_velocity(90,PERCENT)
+    drivetrain.drive_for(FORWARD,390,MM)
+    wait(.8,SECONDS)
+    #intakes 3 stack
+
+    drivetrain.turn_to_heading(195,DEGREES)
+    shootdisc(3)
+    #fires 3 stack 
+
+    #intakes the last two discs
+    drivetrain.turn_to_heading(135,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.drive_for(FORWARD,900,MM)
+    wait(.3,SECONDS)
+    drivetrain.turn_to_heading(178,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    shootdisc(2)
+    #fires last two discs
+
+
+    intake_motor_group.stop()
+
+    #positions bot in front of the roller
+    drivetrain.drive_for(REVERSE,200,MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(REVERSE,110,MM)
+    #.1 turns is perfect for moving the roller once, but we could make use of the optical sensor here
+   
+    turnroller()
+   # intake_motor_group.spin_for(FORWARD,.1,TURNS)
+
+
+    #robot moves itself away from the roller to prepare to turn the other one
+    drivetrain.drive_for(FORWARD,500,MM)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(REVERSE,297,MM)
+    #once again we can make use of the sensor
+    turnroller()
+
+    #resets the drivetrain heading to mitigate errors
+    #this can be a gps resetting point
+    drivetrain.set_heading(0,DEGREES)
+
+    #intakes 3 discs, the wait function here can be improved and the velocity can be perfected
+    drivetrain.turn_to_heading(308,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,750,MM)
+    drivetrain.turn_to_heading(315,DEGREES)
+    drivetrain.drive_for(FORWARD,400,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,485,MM)
+    wait(.4,SECONDS)
+    #
+
+    #fires the discs
+    drivetrain.turn_to_heading(55,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    shootdisc(3)
+    #once again the wait can be perfected, or sensors can be used to detect when the last disc is fired
+
+    #manuevers the robot behind three discs for intaking
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.turn_to_heading(180,DEGREES)
+    drivetrain.drive_for(FORWARD,800,MM)
+    drivetrain.turn_to_heading(225,DEGREES)
+    drivetrain.drive_for(FORWARD,300,MM)
+    wait(.2,SECONDS)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(FORWARD,150,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,150,MM)
+    wait(.4,SECONDS)
+    drivetrain.drive_for(FORWARD,260,MM)
+    wait(.6,SECONDS)
+    #the robot occasionally misses discs here so the intake can be improved by rotating to where the disc should be every wait
+
+    drivetrain.turn_to_heading(55,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    shootdisc(3)
+    drivetocord(600,650,True)
+    
+    #fires the discs
+
+    #robot repositions itself to intake 3 more discs
+    drivetrain.turn_to_heading(285,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.drive_for(FORWARD,400,MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(FORWARD,150,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,100,MM)
+    wait(.3,SECONDS)
+    drivetrain.drive_for(FORWARD,300,MM)
+    wait(.5,SECONDS)
+    #intakes the three
+
+    drivetocord(1500,220, False)
+
+
+
+
+    intake_motor_group.set_velocity(100,PERCENT)
+    drivetrain.turn_to_heading(347,DEGREES)
+    shootdisc(1)
+    
+    drivetrain.turn_to_heading(45,DEGREES)
+    drivetrain.drive_for(FORWARD,550,MM)
+    intake_motor_group.set_velocity(55,PERCENT)
+    wait(1,SECONDS)
+    drivetrain.turn_to_heading(5,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    drivetrain.drive_for(FORWARD,100,MM,wait=False)
+    shootdisc(3)
+    drivetrain.turn_to_heading(90,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.drive_for(FORWARD,750,MM)
+    drivetrain.turn_to_heading(315,DEGREES)
+    drivetrain.drive_for(FORWARD,350,MM)
+    drivetrain.turn_to_heading(23,DEGREES)
+    intake_motor_group.set_velocity(90,PERCENT)
+    shootdisc(2)
+    
+
+
+    
+
+
+
 
     """
-    drivetocord(0,1600,False)
-    drivetocord(-500,0,True)
-    drivetocord(300,1000,True)
+    drivetrain.turn_to_heading(21,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    wait(2,SECONDS)
+    
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(FORWARD,550,MM)
+    wait(.5,SECONDS)
+    drivetrain.turn_to_heading(17,DEGREES)
+    wait(2,SECONDS)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(FORWARD,600,MM)
+    intake_motor_group.set_velocity(95,PERCENT)
+    drivetrain.turn_to_heading(10,DEGREES)
+    wait(2,SECONDS)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(REVERSE,990,MM)
+    drivetrain.turn_to_heading(90,DEGREES)
+    drivetrain.drive_for(REVERSE,575,MM)
+    drivetrain.turn_to_heading(349,DEGREES)
+    drivetrain.drive_for(FORWARD,90,MM)
+
+"""
+    
+
+
+    
+
+   
+
+
+
     """
+    continuemoving = True
+
+    #troublehsooting code
+    #print(top_line_tracker.reflectivity(PERCENT))
+
+    #console prints to brain screen, need to include brain screen when printing
+
+
+
+    #moves the robot into position to fire the discs into high goal
+    drivetrain.drive_for(FORWARD, 200, MM)
+    drivetrain.turn_to_heading(180,DEGREES)
+
+    #fires the discs into the high goal
+    intake_motor_group.spin(REVERSE)
+    wait(1,SECONDS)
+    #stopping the motor is necesary in order to prevent an error (loop)
+    intake_motor_group.stop()
+
+    #drives the robot into position to take in the match loads
+    drivetrain.drive_for(FORWARD,300,MM)
+    drivetrain.turn_to_heading(90,DEGREES)
+
+    #intakes the match loads
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,230,MM)
+
+    #the wait function allows for the discs time to make their way up
+    wait(.85,SECONDS)
+    intake_motor_group.stop()
+
+    #positions the robot to prepare to fire the match loads
+    drivetrain.drive_for(REVERSE,120,MM)
+    #changing the position here allows for more discs to be able to be shot into the goal
+    drivetrain.turn_to_heading(180,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    #fires the match load
+    intake_motor_group.spin(REVERSE)
+    #wait function provides time for all discs to fly into goal
+    wait(2,SECONDS)
+    intake_motor_group.stop()
+        #repositions the bot after firing
+    drivetrain.turn_to_heading(90,DEGREES)
+    drivetrain.drive_for(FORWARD,120,MM)
+    drivetrain.drive_for(REVERSE,300,MM)
+    #bot repositioned, preparing to intake discs
+    wait(1,SECONDS)
+    intake_motor_group.set_velocity(100,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.drive_for(FORWARD,300,MM)
+
+    wait(.85,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.turn_to_heading(180,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    wait(2,SECONDS)
+    intake_motor_group.stop()
+    drivetrain.drive_for(FORWARD,1200,MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+    drivetrain.drive_for(REVERSE,30,MM)
+    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+    drivetrain.drive_for(FORWARD,480,MM)
+    drivetrain.turn_to_heading(0,DEGREES)
+    drivetrain.drive_for(REVERSE,280,MM)
+    intake_motor_group.spin_for(FORWARD,.1,TURNS)
+
+
+    # first part 60 points in 13 seconds, always misses the first disc. code CAN be made more efficient
+    # again this CAN BE MADE MORE EFFICIENT WITH WORK
+
+    """
+    """
+    drivetrain.drive_for(FORWARD, 1200, MM)
+    drivetrain.turn_to_heading(270,DEGREES)
+
+
+    drivetrain.set_drive_velocity(30,PERCENT)
+    intake_motor_group.set_velocity(30,PERCENT)
+
+
+    #part below is prone to not working, i got too stressed, getting rid of it
+    """
+    """
+    while continuemoving == True:
+      while top_line_tracker.reflectivity(PERCENT) == 84:
+         
+         intake_motor_group.stop()
+         continuemoving = False
+      else:
+         drivetrain.drive(FORWARD)
+         intake_motor_group.spin(REVERSE)
+         #troubleshooting code below
+         i = 0
+         while i<30:
+              brain.screen.print(top_line_tracker.reflectivity(PERCENT))
+              brain.screen.next_row()
+              i = i+ 1
+              if middle_line_tracker.reflectivity(PERCENT) == 84:
+                continuemoving = False
+
+
+
+
+    intake_motor_group.stop()
+    wait(300,SECONDS);
+    """
+
+    
+
+    
 # VR threads — Do not delete
 vr_thread(main)
