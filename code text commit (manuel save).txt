@@ -313,29 +313,27 @@ def main():
     #fires the discs
     drivetrain.drive_for(FORWARD,100,MM)
     drivetocord(1500,220, True)
-
-
-
-
-
     intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.turn_to_heading(347,DEGREES)
+
+    """
     #troubleshoot code
     brain.screen.next_row()
     brain.screen.next_row()
     brain.screen.print(gps.x_position(MM))
     brain.screen.next_row()
     brain.screen.print(gps.y_position(MM))
+    """
 
-    shootdisc(1)
-    wait(20,SECONDS)
+    shootdisc(7)
+
     #fires the blue side match loads
     
     drivetrain.turn_to_heading(45,DEGREES)
     drivetrain.drive_for(FORWARD,550,MM)
     intake_motor_group.set_velocity(55,PERCENT)
     wait(1,SECONDS)
-    drivetrain.turn_to_heading(5,DEGREES)
+    drivetrain.turn_to_heading(12,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.drive_for(FORWARD,100,MM,wait=False)
     shootdisc(3)
@@ -359,11 +357,38 @@ def main():
     intake_motor_group.set_velocity(30,PERCENT)
     drivetrain.drive_for(FORWARD,350,MM)
     wait(.2,SECONDS)
-    drivetrain.drive_for(FORWARD,450,MM)
-    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,500,MM)
+    wait(.3,SECONDS)
     drivetrain.turn_to_heading(359,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
     shootdisc(2)
+    drivetrain.drive_for(REVERSE,150,MM)
+
+    #you can use the gps to driveuntil here
+    drivetrain.turn_to_heading(90,DEGREES)
+    drivetrain.drive_for(REVERSE,100,MM)
+    turnroller()
+    drivetrain.drive_for(FORWARD,500,MM)
+    drivetrain.turn_to_heading(180,DEGREES)
+    drivetrain.drive_for(REVERSE,280,MM)
+    turnroller()
+    intake_motor_group.set_velocity(30,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    drivetrain.turn_to_heading(130,DEGREES)
+    drivetrain.drive_for(FORWARD,700,MM)
+    wait(.1,SECONDS)
+    drivetrain.turn_to_heading(135,DEGREES)
+    drivetrain.drive_for(FORWARD,350,MM)
+    wait(.1,SECONDS)
+    drivetrain.drive_for(FORWARD,520,MM)
+    wait(.3,SECONDS)
+    drivetrain.drive_for(FORWARD,500,MM)
+    drivetrain.turn_to_heading(218,DEGREES)
+    intake_motor_group.set_velocity(90,PERCENT)
+    shootdisc(3)
+    #drivetrain.drive_for(FORWARD,400,MM)
+
+
     
 
     
