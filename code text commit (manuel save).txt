@@ -28,6 +28,13 @@ top_line_tracker = LineTracker("TopLineTracker", 24)
 # 
 # --------------------------------------------------
 
+#show all the sensors I used and explain what they do HERE
+#SPELL OUT THE RUBRIC
+#Sensors: top line tracker used to detect when 
+
+
+#add a turn AND drive function to make my code more concise and understandable
+
 # Library imports
 from vexcode_vrc import *
 
@@ -92,14 +99,14 @@ def intakedisc(discstointake):
 endposx = 0
 endposy = 0
 
-beginposx = 0
-beginposy = 0
-beginheading = 0
+#beginposx = 0
+#beginposy = 0
+#beginheading = 0
 
 
-turnangle = 0
-turnheading = 0
-travelDistance = 0
+#turnangle = 0
+#turnheading = 0
+#travelDistance = 0
 
 Otherturn = False
 
@@ -115,12 +122,12 @@ def drivetocord(endposx,endposy, Otherturn):
 
     travelDistance = math.sqrt((endposx-(beginposx))**2 + (endposy-(beginposy))**2)
 
-    turnangle = math.degrees(math.atan((endposy-beginposy) / (endposx - beginposx)))
+    turnangle = (math.degrees(math.atan2((endposy-beginposy), (endposx - beginposx))))
     
     if Otherturn == False:
         turnheading = beginheading - turnangle
     else:
-        turnheading = beginheading + turnangle
+        turnheading = 360 -( beginheading - turnangle +35 )
     
     
     if turnheading > 360:
@@ -128,6 +135,16 @@ def drivetocord(endposx,endposy, Otherturn):
         
     if turnheading < 0:
         turnheading = turnheading + 360
+
+    """
+    brain.screen.print(turnangle)
+    brain.screen.next_row()
+    brain.screen.print(turnheading)
+    brain.screen.next_row()
+    brain.screen.print(beginposx)
+    brain.screen.next_row()
+    brain.screen.print(beginposy)
+    """
     
     drivetrain.turn_to_heading(turnheading,DEGREES)
     drivetrain.drive_for(FORWARD,travelDistance,MM)
@@ -273,31 +290,46 @@ def main():
     drivetrain.turn_to_heading(55,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
     shootdisc(3)
-    drivetocord(600,650,True)
-    
-    #fires the discs
 
-    #robot repositions itself to intake 3 more discs
-    drivetrain.turn_to_heading(285,DEGREES)
-    intake_motor_group.set_velocity(30,PERCENT)
+
+    #drivetocord(300,300,True)
+    drivetrain.turn_to_heading(0,DEGREES)
     drivetrain.drive_for(FORWARD,400,MM)
     drivetrain.turn_to_heading(270,DEGREES)
-    drivetrain.drive_for(FORWARD,150,MM)
-    wait(.2,SECONDS)
-    drivetrain.drive_for(FORWARD,100,MM)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.drive_for(FORWARD,200,MM)
     wait(.3,SECONDS)
-    drivetrain.drive_for(FORWARD,300,MM)
+    drivetrain.drive_for(FORWARD,130,MM)
+    wait(.3,SECONDS)
+    drivetrain.drive_for(FORWARD,220,MM)
     wait(.5,SECONDS)
-    #intakes the three
+    drivetrain.turn_to_heading(24,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    shootdisc(3)
+    
 
-    drivetocord(1500,220, False)
+
+
+    #fires the discs
+    drivetrain.drive_for(FORWARD,100,MM)
+    drivetocord(1500,220, True)
+
 
 
 
 
     intake_motor_group.set_velocity(100,PERCENT)
     drivetrain.turn_to_heading(347,DEGREES)
+    #troubleshoot code
+    brain.screen.next_row()
+    brain.screen.next_row()
+    brain.screen.print(gps.x_position(MM))
+    brain.screen.next_row()
+    brain.screen.print(gps.y_position(MM))
+
     shootdisc(1)
+    wait(20,SECONDS)
+    #fires the blue side match loads
     
     drivetrain.turn_to_heading(45,DEGREES)
     drivetrain.drive_for(FORWARD,550,MM)
@@ -315,6 +347,25 @@ def main():
     drivetrain.turn_to_heading(23,DEGREES)
     intake_motor_group.set_velocity(90,PERCENT)
     shootdisc(2)
+    intake_motor_group.spin(REVERSE)
+    intake_motor_group.set_velocity(50,PERCENT)
+    drivetrain.turn_to_heading(315,DEGREES)
+    drivetrain.drive_for(FORWARD,350,MM)
+    wait(1.2,SECONDS)
+    drivetrain.turn_to_heading(13,DEGREES)
+    intake_motor_group.set_velocity(94,PERCENT)
+    shootdisc(3)
+    drivetrain.turn_to_heading(315,DEGREES)
+    intake_motor_group.set_velocity(30,PERCENT)
+    drivetrain.drive_for(FORWARD,350,MM)
+    wait(.2,SECONDS)
+    drivetrain.drive_for(FORWARD,450,MM)
+    wait(.2,SECONDS)
+    drivetrain.turn_to_heading(359,DEGREES)
+    intake_motor_group.set_velocity(100,PERCENT)
+    shootdisc(2)
+    
+
     
 
 
