@@ -34,6 +34,7 @@ top_line_tracker = LineTracker("TopLineTracker", 24)
 
 
 #add a turn AND drive function to make my code more concise and understandable
+#ALL DISTENCE UNITS IN MILLIMETERS; ALL ANGLE UNITS IN DEGREES
 
 # Library imports
 from vexcode_vrc import *
@@ -64,6 +65,16 @@ def shootdisc(discstoshoot):
     discstoshoot = 0
 
 
+
+
+def codesetup():
+    intake_motor_group.set_velocity(100,PERCENT)
+    drivetrain.set_drive_velocity(100,PERCENT)
+    drivetrain.set_turn_velocity(100,PERCENT)
+    drivetrain.set_heading(270,DEGREES)
+
+
+
 #function to position the robot to intake the disc
 def movetodisc():
     drivetrain.drive(FORWARD)
@@ -73,26 +84,26 @@ def movetodisc():
 
 
 #to be used as a zig zagger to get discs near low goal barrier
+
+stack = True
 discstointake = 0
-discsintaked = 0
-def intakedisc(discstointake):
-    discsintaked = 0
-    intake_motor_group.set_velocity(30,PERCENT)
-    intake_motor_group.spin(REVERSE)
 
-    while not bottom_line_tracker.reflectivity(PERCENT) > 80:
+def intakedisc(discstointake, stack):
+    if stack == True:
+        while bottom_distance.object_distance(MM) < 40:
+            intake_motor_group.spin(REVERSE)
             wait(5, MSEC)
-          
-    while not bottom_line_tracker.reflectivity(PERCENT) < 20:
-            wait(5, MSEC)
-    discsintaked += 1
-    while not discstointake == discsintaked:
-        wait(5,MSEC)
+        while not top_line_tracker.reflectivity(PERCENT)>80:
+            wait(5,MSEC)
+        intake_motor_group.stop()
+    else:
+        for x in range(discstointake):
+            movetodisc()
+            while bottom_distance.object_distance(MM) < 40:
+                intake_motor_group.spin(REVERSE)
+                wait(5, MSEC)
 
 
-    discstointake = 0
-    intake_motor_group.stop()
-#to be used as a zig zagger to get the discs near the low gal barrier
 
 
 #declaring the variables to be used in the drive to coordinate function
@@ -155,124 +166,147 @@ def drivetocord(endposx,endposy, Otherturn):
 def main():
 
 
-
+    codesetup()
 
     #SETUP CODE, GETS THE ROBOT TO BE AS FAST AS POSSIBLE
-    intake_motor_group.set_velocity(100,PERCENT)
-    drivetrain.set_drive_velocity(100,PERCENT)
-    drivetrain.set_turn_velocity(100,PERCENT)
-    drivetrain.set_heading(270,DEGREES)
+
 
     #   FRONT of the bot is the intake
     #   BACK of the bot is the shooter
 
-    #begin
+
+
+
+
+    #AUTONOMOUS BEGIN
     drivetrain.drive_for(REVERSE,40,MM)
     drivetrain.turn_to_heading(168,DEGREES)
     drivetrain.drive_for(FORWARD,110,MM)
-
+    #Robot positions itself so it's intake faces the match loader and the shooter faces the high goal
+    #this allows for the robot to intake and shoot at the same time
     shootdisc(2)
-    #finishes section 1, shoots preloads
-    
-    intake_motor_group.spin(REVERSE)
-    #removable
+    #the robot shoots 9 discs, including the 2 preloads and 7 match loads
     drivetrain.drive_for(FORWARD,190,MM)
+    #robot repositions itself so it can intake a stack of 3 discs
 
-    #removable
 
-
+    #Spinning the intake in REVERSE allows for the discs to be brought IN to the robot and for the disc to be shot out,
+    #while spinning the intake in FORWARD brings the discs OUT 
 
     drivetrain.turn_to_heading(240,DEGREES)
     drivetrain.drive_for(FORWARD,500,MM)
-    wait(.8,SECONDS)
-    intake_motor_group.stop()
+    intakedisc(3,True)
+    #intakedisc() collects the parameters of how many discs you would like to intake, and weather or not the discs are a stack.
     drivetrain.turn_to_heading(192,DEGREES)
+    #the robot's shooter turns to face towards the high goal.
+    #it is necesary to include specific degrees like 192 to ensure that the discs being shot here do not interfere (knock out) the discs that have been previously shot
+    #192 degrees is angled in a way where it will not knock out other discs
     shootdisc(3)
     #shoots 3 stack
-    intake_motor_group.spin(REVERSE)
 
+    #the robot prepares to intake two discs
     drivetrain.turn_to_heading(270,DEGREES)
     drivetrain.drive_for(FORWARD,640,MM)
     wait(.1,SECONDS)
-    intake_motor_group.stop()
+    #the robot drives into range for intaking the disc
+    #since the intake is already spinning, it waits .1 of a second for the disc to be held by the robot
+    intake_motor_group.set_velocity(86,PERCENT)
+    #the velocity is set lower so the disc does not get shot out early and miss the goal
     drivetrain.turn_to_heading(145,DEGREES)
-    intake_motor_group.set_velocity(50,PERCENT)
-    intake_motor_group.spin(REVERSE)
+    #drivetrain turns to intake another disc
     drivetrain.drive_for(FORWARD,210,MM)
-    #intakes 2 discs
+    #drivetrain drives into disc, no extra wait time is needed
 
-    intake_motor_group.set_velocity(90,PERCENT)
-    intake_motor_group.spin(REVERSE)
-    drivetrain.turn_to_heading(205,DEGREES)
+    intake_motor_group.set_velocity(96,PERCENT)
+    #velocity goes as high as accurately possible
+
+    drivetrain.turn_to_heading(205,DEGREES,wait=False)
+    #the drivetrain turns so shooter faces the goal
+    #the boolean at the end of the function tells the next line to move on before the drivetrain has finished turning
     shootdisc(2)
-    #shoots all two
+    #shoots all two discs
 
    
-    #turns towards the three stack
+    intake_motor_group.set_velocity(96,PERCENT)
+    #reset the intake motor velocity to 100
     drivetrain.turn_to_heading(145,DEGREES)
-    intake_motor_group.set_velocity(90,PERCENT)
+    #turns towards the three stack
     drivetrain.drive_for(FORWARD,390,MM)
-    wait(.8,SECONDS)
-    #intakes 3 stack
+    intakedisc(3,True)
+    #drives to and intakes 3 stack
 
     drivetrain.turn_to_heading(195,DEGREES)
+    #drivetrain turns towards high goal
     shootdisc(3)
     #fires 3 stack 
 
-    #intakes the last two discs
     drivetrain.turn_to_heading(135,DEGREES)
-    intake_motor_group.set_velocity(30,PERCENT)
+    #turns to intake two discs
+    intake_motor_group.set_velocity(86,PERCENT)
     drivetrain.drive_for(FORWARD,900,MM)
-    wait(.3,SECONDS)
+    #drives into the first disc, which it intakes while the robot moves
+    wait(.1,SECONDS)
+    #waits .1 seconds for the second disc to be held by the robot
     drivetrain.turn_to_heading(178,DEGREES)
+    #the robot's shooter turns to face the blue high goal
     intake_motor_group.set_velocity(100,PERCENT)
     shootdisc(2)
-    #fires last two discs
+    #fires two discs
 
 
     intake_motor_group.stop()
+    #intake stops to not interfere with the roller turning functions
 
     #positions bot in front of the roller
     drivetrain.drive_for(REVERSE,200,MM)
     drivetrain.turn_to_heading(270,DEGREES)
+    #turns so that the robot's rolling mech is facing the roller
     drivetrain.drive_for(REVERSE,110,MM)
-    #.1 turns is perfect for moving the roller once, but we could make use of the optical sensor here
-   
+
+
     turnroller()
-   # intake_motor_group.spin_for(FORWARD,.1,TURNS)
+    #uses the optical sensor to detect how much the roller needs to be turned, and turns the roller accordingly
 
 
-    #robot moves itself away from the roller to prepare to turn the other one
+    #Robot moves to the second roller
     drivetrain.drive_for(FORWARD,500,MM)
     drivetrain.turn_to_heading(0,DEGREES)
+    #turns so that the robot's rolling mech is facing the roller
     drivetrain.drive_for(REVERSE,297,MM)
-    #once again we can make use of the sensor
     turnroller()
+    #robot uses the optical sensor again to turn the roller
 
-    #resets the drivetrain heading to mitigate errors
-    #this can be a gps resetting point
+    #resets the drivetrain heading to mitigate potential future errors
     drivetrain.set_heading(0,DEGREES)
 
-    #intakes 3 discs, the wait function here can be improved and the velocity can be perfected
-    drivetrain.turn_to_heading(308,DEGREES)
-    intake_motor_group.set_velocity(30,PERCENT)
-    intake_motor_group.spin(REVERSE)
-    drivetrain.drive_for(FORWARD,750,MM)
-    drivetrain.turn_to_heading(315,DEGREES)
-    drivetrain.drive_for(FORWARD,400,MM)
-    wait(.2,SECONDS)
-    drivetrain.drive_for(FORWARD,485,MM)
-    wait(.4,SECONDS)
-    #
 
-    #fires the discs
-    drivetrain.turn_to_heading(55,DEGREES)
+    drivetrain.turn_to_heading(308,DEGREES)
+    #alligns the intake with the first disc
+
+    intake_motor_group.set_velocity(40,PERCENT)
+    intake_motor_group.spin(REVERSE)
+    #activates the intake for the three discs
+
+    drivetrain.drive_for(FORWARD,750,MM)
+    #drives into the first of the three discs, intakes it
+    drivetrain.turn_to_heading(315,DEGREES)
+    #realigns the drivetrain for the next to discs
+
+    drivetrain.drive_for(FORWARD,885,MM)
+    #drives to the third of the three discs. picks up the second disc along the way
+    wait(.15,SECONDS)
+    #wait gives the robot time to intake the discs
+    
+
+
+    drivetrain.turn_to_heading(45,DEGREES)
     intake_motor_group.set_velocity(100,PERCENT)
+    #aims the shooter at the RED HIGH GOAL
     shootdisc(3)
-    #once again the wait can be perfected, or sensors can be used to detect when the last disc is fired
+    #fires the three discs
 
     #manuevers the robot behind three discs for intaking
-    intake_motor_group.set_velocity(30,PERCENT)
+    intake_motor_group.set_velocity(50,PERCENT)
     drivetrain.turn_to_heading(180,DEGREES)
     drivetrain.drive_for(FORWARD,800,MM)
     drivetrain.turn_to_heading(225,DEGREES)
