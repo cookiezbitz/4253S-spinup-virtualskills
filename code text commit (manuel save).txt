@@ -19,33 +19,21 @@ top_line_tracker = LineTracker("TopLineTracker", 24)
 
 # --------------------------------------------------
 # 
-# 	Project:            VEXcode Project
-#	Author:             VEX
+# 	Project:            4253S Virtual Skills
+#	Author:             Remiel
 #	Created:            
-#	Description:        VEXcode V5 Python Project
-#   Starting Position:  
-#   Preload:            
+#	Description:        Made for the Vex VR challenge in the 2022-2023 Spin up season
+#   Starting Position:  Position C 
+#   Preload:            2 Preloads
 # 
 # --------------------------------------------------
 
-#show all the sensors I used and explain what they do HERE
-#SPELL OUT THE RUBRIC
-#Sensors: top line tracker used to detect when 
 
 
-#add a turn AND drive function to make my code more concise and understandable
 #ALL DISTENCE UNITS IN MILLIMETERS; ALL ANGLE UNITS IN DEGREES
 
 # Library imports
 from vexcode_vrc import *
-
-
-#This is a setup function that will be ran once in the beginning of the code
-def codesetup():
-    intake_motor_group.set_velocity(100,PERCENT)
-    drivetrain.set_drive_velocity(100,PERCENT)
-    drivetrain.set_turn_velocity(100,PERCENT)
-    drivetrain.set_heading(270,DEGREES)
 
 
 
@@ -92,9 +80,12 @@ def shootdisc(discstoshoot):
 # uses the optical sensor and while loop conditionals
 def movetodisc():
     drivetrain.drive(FORWARD)
+    #robot moves forward until it has reached a disc
     while not bottom_distance.object_distance(MM) < 20:
+        #checks if the disc is within 20 millimeters of the robot
         wait(5, MSEC)
     drivetrain.stop()
+    #if the while loop condition is fufilled, the drivetrain stops driving.
 
 
 
@@ -105,7 +96,6 @@ stack = True
 #True denotes, yes, it is in a stack, while False means no stack
 discstointake = 0
 #This variable is also assigned by the user. It tells the function the amount of discs it needs to intake
-
 
 #function to intake discs
 #uses line and distence sensors, also uses while and for loop conditionals
@@ -149,7 +139,6 @@ beginheading = 0
 #These starting conditions collect info from the GPS sensor
 #has the beginning coordinate position and orientation
 
-
 turnangle = 0
 turnheading = 0
 travelDistance = 0
@@ -162,13 +151,11 @@ Otherturn = False
 def drivetocord(endposx,endposy, Otherturn):
 #drive to coordinate function collects the desired endpoint and whether or not otherturn will be used
 
-
     beginposx = gps.x_position(MM)
     beginposy = gps.y_position(MM)
     beginheading = drivetrain.heading(DEGREES)
     #gets the values of the the robot's starting conditions when the function is called
     #this includes the GPS x and y positions of the robot and the robot heading as read in the inertial sensor
-
 
     travelDistance = math.sqrt((endposx-(beginposx))**2 + (endposy-(beginposy))**2)
     #calculates for travel distance using the pythagorean theorem
@@ -189,43 +176,27 @@ def drivetocord(endposx,endposy, Otherturn):
     #Headings go from 0-360
     #these corrections make if the turnheading goes over or under the range
     if turnheading > 360:
-        turnheading = turnheading -360
-        
+        turnheading = turnheading -360    
     if turnheading < 0:
         turnheading = turnheading + 360
 
-    """
-    brain.screen.print(turnangle)
-    brain.screen.next_row()
-    brain.screen.print(turnheading)
-    brain.screen.next_row()
-    brain.screen.print(beginposx)
-    brain.screen.next_row()
-    brain.screen.print(beginposy)
-    """
-    
     #The robot turns to the calculated heading using the inertial sensor
     drivetrain.turn_to_heading(turnheading,DEGREES)
     #the robot travels the calculated distence
     drivetrain.drive_for(FORWARD,travelDistance,MM)
-    
 
 
 # Add project code in "main"
 def main():
 
-
-    codesetup()
-
-    #SETUP CODE, GETS THE ROBOT TO BE AS FAST AS POSSIBLE
-
+    intake_motor_group.set_velocity(100,PERCENT)
+    drivetrain.set_drive_velocity(100,PERCENT)
+    drivetrain.set_turn_velocity(100,PERCENT)
+    drivetrain.set_heading(270,DEGREES)
+    #Setup code to get the robot moving as fast as possible
 
     #   FRONT of the bot is the intake
     #   BACK of the bot is the shooter
-
-
-
-
 
     #AUTONOMOUS BEGIN
     drivetrain.drive_for(REVERSE,40,MM)
@@ -311,8 +282,6 @@ def main():
     drivetrain.turn_to_heading(270,DEGREES)
     #turns so that the robot's rolling mech is facing the roller
     drivetrain.drive_for(REVERSE,110,MM)
-
-
     turnroller()
     #uses the optical sensor to detect how much the roller needs to be turned, and turns the roller accordingly
 
@@ -361,8 +330,8 @@ def main():
     drivetrain.turn_to_heading(225,DEGREES)
 
 
-    #The following is a sequence that is uniquely usedd when collecting discs near barriers
-    #In this sequence, the robot staggers its movement by having short pauses inbetween to intake the iscs
+    #The following is a sequence that is uniquely used when collecting discs near barriers
+    #In this sequence, the robot staggers its movement by having short pauses inbetween to intake the discs
 
     drivetrain.drive_for(FORWARD,300,MM)
     wait(.1,SECONDS)
